@@ -1,99 +1,18 @@
+export default async function handler(req, res) {
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  const channelId = "UCxMmKmOua1yM46yZMoADFnQ";
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trader Metamorfose - Bio</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to bottom, #0f0f0f, #1c1c1c);
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
-    .logo {
-      width: 150px;
-      margin: 30px auto 10px;
-    }
-    h1 {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-    }
-    p {
-      font-size: 1rem;
-      color: #bbb;
-    }
-    .button-container {
-      margin-top: 30px;
-    }
-    .button {
-      display: block;
-      width: 80%;
-      max-width: 400px;
-      margin: 15px auto;
-      padding: 15px;
-      background: #14ff5f1c;
-      border: 1px solid #14ff5f;
-      border-radius: 10px;
-      color: white;
-      text-decoration: none;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-    .button:hover {
-      background: #14ff5f;
-      color: black;
-    }
-    footer {
-      margin-top: 40px;
-      font-size: 0.8rem;
-      color: #555;
-    }
-    .latest-video {
-      margin-top: 40px;
-    }
-  </style>
-</head>
-<body>
-  <img class="logo" src="logo.png" alt="Logo Trader Metamorfose" />
-  <h1>Desperte o Trader que há em você</h1>
-  <p>Setups validados. Mentoria prática. Conteúdo para sua consistência.</p>
+  try {
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&order=date&part=snippet&type=video&maxResults=1`);
+    const data = await response.json();
 
-  <div class="button-container">
-    <a class="button" href="https://t.me/+7rIK0qx38CBmMDMx" target="_blank">🚀 Entrar no Canal VIP no Telegram</a>
-    <a class="button" href="https://youtube.com/@tradermetamorfose" target="_blank">🎬 Ver Conteúdo no YouTube</a>
-    <a class="button" href="pagamento.html">💳 Participar da Mentoria</a>
-  </div>
-
-  <div class="latest-video">
-    <h2>🎥 Último vídeo do YouTube</h2>
-    <div id="video-container">Carregando vídeo...</div>
-  </div>
-
-  <footer>
-    © 2025 Trader Metamorfose. Todos os direitos reservados.
-  </footer>
-
-  <script>
-    const channelId = "UCxMmKmOua1yM46yZMoADFnQ";
-    const apiKey = "AIzaSyC-cgEPmy0DxeP9dQC-q33vLNGsd0lie0I";
-    fetch(`https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&order=date&part=snippet&type=video&maxResults=1`)
-      .then(res => res.json())
-      .then(data => {
-        const videoId = data.items?.[0]?.id?.videoId;
-        if (videoId) {
-          document.getElementById("video-container").innerHTML =
-            `<iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-        } else {
-          document.getElementById("video-container").innerText = "Nenhum vídeo encontrado.";
-        }
-      })
-      .catch(() => {
-        document.getElementById("video-container").innerText = "Erro ao carregar o vídeo.";
-      });
-  </script>
-</body>
-</html>
+    const videoId = data.items?.[0]?.id?.videoId;
+    if (videoId) {
+      res.status(200).json({ videoId });
+    } else {
+      res.status(404).json({ error: "Vídeo não encontrado" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar o vídeo" });
+  }
+}
