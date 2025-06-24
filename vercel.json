@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/ultimo-video.js", "use": "@vercel/node" }
+  ]
+}
