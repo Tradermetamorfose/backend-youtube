@@ -1,6 +1,9 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/ultimo-video.js", "use": "@vercel/node" }
+    { "src": "api/último-video.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/último-video", "dest": "/api/último-video.js" }
   ]
 }
